@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="001" author="neto-student">
+
+        <createTable tableName="users" remarks="Пользователи облачного хранилища">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="uk_users_login"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addComments tableName="users">
+            <comment>Таблица хранит учётные данные пользователей для авторизации в облачном хранилище</comment>
+        </addComments>
+
+        <insert tableName="users">
+            <column name="login" value="testuser"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+        </insert>
+        <rollback>
+            <dropTable tableName="users" cascadeConstraints="true"/>
+        </rollback>
+
+    </changeSet>
+
+</databaseChangeLog>
