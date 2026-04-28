@@ -9,5 +9,4 @@ public class NetoTask52CloudStorageProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(NetoTask52CloudStorageProjectApplication.class, args);
     }
-
 }
