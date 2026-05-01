@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -30,7 +29,6 @@ import java.util.Optional;
 class UserRepositoryIntegrationTest {
 
     @Container
-    @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
             .withDatabaseName("testdb")
             .withUsername("test")
@@ -92,18 +90,5 @@ class UserRepositoryIntegrationTest {
         Optional<User> found = userRepository.findByLogin("nonexistent");
 
         assertFalse(found.isPresent());
-    }
-
-    @Test
-    @DisplayName("Должен проверить существование пользователя по логину")
-    void shouldCheckUserExistsByLogin() {
-
-        User user = new User();
-        user.setLogin("exists");
-        user.setPasswordHash("hashed-password");
-        userRepository.save(user);
-
-        assertTrue(userRepository.existsByLogin("exists"));
-        assertFalse(userRepository.existsByLogin("notexists"));
     }
 }

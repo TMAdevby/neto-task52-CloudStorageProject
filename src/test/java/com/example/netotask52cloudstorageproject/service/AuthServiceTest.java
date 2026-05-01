@@ -1,4 +1,3 @@
-
 package com.example.netotask52cloudstorageproject.service;
 
 import com.example.netotask52cloudstorageproject.model.User;
@@ -8,11 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Optional;
 
 @DisplayName("AuthService Тесты")
@@ -45,15 +47,12 @@ class AuthServiceTest {
             testUser.setPasswordHash("$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy");
 
             when(userRepository.findByLogin("testuser")).thenReturn(Optional.of(testUser));
-
             when(tokenService.generateToken(testUser)).thenReturn("test-token-123");
 
             String token = authService.login("testuser", "password");
 
-            assertNotNull(token, "Токен не должен быть null");
-
-            assertEquals("test-token-123", token, "Токен должен совпадать с ожидаемым");
-
+            assertNotNull(token);
+            assertEquals("test-token-123", token);
             verify(userRepository, times(1)).findByLogin("testuser");
             verify(tokenService, times(1)).generateToken(testUser);
         }
@@ -70,12 +69,10 @@ class AuthServiceTest {
 
             IllegalArgumentException exception = assertThrows(
                     IllegalArgumentException.class,
-                    () -> authService.login("nonexistent", "password"),
-                    "Должно быть выброшено IllegalArgumentException"
+                    () -> authService.login("nonexistent", "password")
             );
 
             assertEquals("Неверный логин или пароль", exception.getMessage());
-
             verify(tokenService, never()).generateToken(any());
         }
 
@@ -91,12 +88,10 @@ class AuthServiceTest {
 
             IllegalArgumentException exception = assertThrows(
                     IllegalArgumentException.class,
-                    () -> authService.login("testuser", "wrongpassword"),
-                    "Должно быть выброшено IllegalArgumentException"
+                    () -> authService.login("testuser", "wrongpassword")
             );
 
             assertEquals("Неверный логин или пароль", exception.getMessage());
-
             verify(tokenService, never()).generateToken(any());
         }
     }
@@ -110,7 +105,6 @@ class AuthServiceTest {
         void shouldInvalidateTokenOnSuccessfulLogout() {
             User testUser = new User();
             testUser.setId(1L);
-            testUser.setLogin("testuser");
 
             String validToken = "valid-token-123";
 
@@ -128,12 +122,10 @@ class AuthServiceTest {
 
             IllegalArgumentException exception = assertThrows(
                     IllegalArgumentException.class,
-                    () -> authService.logout("invalid-token"),
-                    "Должно быть выброшено IllegalArgumentException"
+                    () -> authService.logout("invalid-token")
             );
 
             assertEquals("Недействительный токен", exception.getMessage());
-
             verify(tokenService, never()).invalidateToken(any());
         }
     }

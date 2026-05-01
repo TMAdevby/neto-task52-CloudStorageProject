@@ -39,37 +39,31 @@ class TokenServiceTest {
         @Test
         @DisplayName("Должен сгенерировать уникальный токен")
         void shouldGenerateUniqueToken() {
-
             User testUser = new User();
             testUser.setId(1L);
-            testUser.setLogin("testuser");
 
             String token1 = tokenService.generateToken(testUser);
             String token2 = tokenService.generateToken(testUser);
 
-            assertNotNull(token1, "Токен не должен быть null");
-            assertNotNull(token2, "Токен не должен быть null");
-
-            assertNotEquals(token1, token2, "Токены должны быть уникальными");
-
-            assertEquals(32, token1.length(), "Длина токена должна быть 32 символа");
+            assertNotNull(token1);
+            assertNotNull(token2);
+            assertNotEquals(token1, token2);
+            assertEquals(32, token1.length());
         }
 
         @Test
         @DisplayName("Должен сохранить токен в хранилище")
         void shouldStoreTokenInMemory() {
-
             User testUser = new User();
             testUser.setId(1L);
-            testUser.setLogin("testuser");
 
             String token = tokenService.generateToken(testUser);
 
             Optional<AuthToken> storedToken = tokenService.getToken(token);
 
-            assertTrue(storedToken.isPresent(), "Токен должен быть сохранён");
+            assertTrue(storedToken.isPresent());
             assertEquals(testUser.getId(), storedToken.get().getUser().getId());
-            assertTrue(storedToken.get().isValid(), "Токен должен быть валиден");
+            assertTrue(storedToken.get().isValid());
         }
     }
 
@@ -80,45 +74,37 @@ class TokenServiceTest {
         @Test
         @DisplayName("Должен вернуть пользователя для валидного токена")
         void shouldReturnUserForValidToken() {
-
             User testUser = new User();
             testUser.setId(1L);
-            testUser.setLogin("testuser");
 
             String token = tokenService.generateToken(testUser);
 
             Optional<User> result = tokenService.validateToken(token);
 
-            assertTrue(result.isPresent(), "Пользователь должен быть найден");
+            assertTrue(result.isPresent());
             assertEquals(testUser.getId(), result.get().getId());
         }
 
         @Test
         @DisplayName("Должен вернуть пустой Optional для несуществующего токена")
         void shouldReturnEmptyForNonExistentToken() {
-
             Optional<User> result = tokenService.validateToken("non-existent-token");
-
-            assertFalse(result.isPresent(), "Пользователь не должен быть найден");
+            assertFalse(result.isPresent());
         }
 
         @Test
         @DisplayName("Должен вернуть пустой Optional для отозванного токена")
         void shouldReturnEmptyForInvalidatedToken() {
-
             User testUser = new User();
             testUser.setId(1L);
 
             String token = tokenService.generateToken(testUser);
-
             tokenService.invalidateToken(token);
 
             Optional<User> result = tokenService.validateToken(token);
-
-            assertFalse(result.isPresent(), "Отозванный токен должен быть недействителен");
+            assertFalse(result.isPresent());
         }
     }
-
 
     @Nested
     @DisplayName("Когда отзывается токен")
@@ -127,7 +113,6 @@ class TokenServiceTest {
         @Test
         @DisplayName("Должен сделать токен недействительным")
         void shouldInvalidateToken() {
-
             User testUser = new User();
             testUser.setId(1L);
 
@@ -139,16 +124,14 @@ class TokenServiceTest {
             tokenService.invalidateToken(token);
 
             Optional<AuthToken> afterInvalidation = tokenService.getToken(token);
-            assertFalse(afterInvalidation.get().isValid(), "Токен должен быть недействителен");
+            assertFalse(afterInvalidation.get().isValid());
         }
 
         @Test
         @DisplayName("Не должен выбрасывать исключение для несуществующего токена")
         void shouldNotThrowForNonExistentToken() {
-
             assertDoesNotThrow(
-                    () -> tokenService.invalidateToken("non-existent-token"),
-                    "Не должно быть исключений для несуществующего токена"
+                    () -> tokenService.invalidateToken("non-existent-token")
             );
         }
     }
