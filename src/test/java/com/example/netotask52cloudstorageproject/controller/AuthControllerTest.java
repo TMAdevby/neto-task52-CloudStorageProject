@@ -5,29 +5,28 @@ import com.example.netotask52cloudstorageproject.dto.LoginResponse;
 import com.example.netotask52cloudstorageproject.service.AuthService;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("AuthController Тесты")
 class AuthControllerTest {
 
-    @MockBean
+    @Mock
     private AuthService authService;
 
+    @InjectMocks
     private AuthController authController;
-
-    @BeforeEach
-    void setUp() {
-        authController = new AuthController(authService);
-    }
 
     @Nested
     @DisplayName("Когда выполняется логин")
@@ -36,7 +35,6 @@ class AuthControllerTest {
         @Test
         @DisplayName("Должен вернуть 200 с токеном при успешном логине")
         void shouldReturn200WithTokenOnSuccessfulLogin() {
-
             LoginRequest request = new LoginRequest("testuser", "password");
 
             when(authService.login("testuser", "password")).thenReturn("test-token-123");
@@ -51,7 +49,6 @@ class AuthControllerTest {
         @Test
         @DisplayName("Должен вернуть 400 при неверных учётных данных")
         void shouldReturn400OnInvalidCredentials() {
-
             LoginRequest request = new LoginRequest("testuser", "wrongpassword");
 
             when(authService.login("testuser", "wrongpassword"))
@@ -70,7 +67,6 @@ class AuthControllerTest {
         @Test
         @DisplayName("Должен вернуть 200 при успешном логауте")
         void shouldReturn200OnSuccessfulLogout() {
-
             String validToken = "valid-token-123";
 
             doNothing().when(authService).logout(validToken);
@@ -83,7 +79,6 @@ class AuthControllerTest {
         @Test
         @DisplayName("Должен вернуть 401 при недействительном токене")
         void shouldReturn401OnInvalidToken() {
-
             String invalidToken = "invalid-token";
 
             doThrow(new IllegalArgumentException("Недействительный токен"))
