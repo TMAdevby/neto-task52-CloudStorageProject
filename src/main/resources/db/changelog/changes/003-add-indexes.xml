@@ -10,13 +10,16 @@
         <createIndex tableName="users" indexName="idx_users_login">
             <column name="login"/>
         </createIndex>
+
         <createIndex tableName="stored_files" indexName="idx_files_user_filename">
             <column name="user_id"/>
             <column name="filename"/>
         </createIndex>
+
         <createIndex tableName="stored_files" indexName="idx_files_hash">
             <column name="file_hash"/>
         </createIndex>
+
         <rollback>
             <dropIndex tableName="users" indexName="idx_users_login"/>
             <dropIndex tableName="stored_files" indexName="idx_files_user_filename"/>

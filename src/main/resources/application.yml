@@ -1,13 +1,26 @@
 server:
   port: 8080
+
 spring:
+  application:
+    name: neto-task52-cloud-storage
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/cloud_storage
+    url: jdbc:postgresql://postgres:5432/cloud_storage
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
   liquibase:
     enabled: true
-    change-locations: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: public
+    drop-first: false
