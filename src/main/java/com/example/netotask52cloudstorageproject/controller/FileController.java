@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cloud")
+@RequestMapping({"", "/cloud"})
 @RequiredArgsConstructor
 public class FileController {
 
